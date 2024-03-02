@@ -8,6 +8,6 @@ RUN go mod download
 
 COPY . .
 
-RUN go build -o bin/memecatcher ./cmd/api
+RUN go build -o bin/api ./cmd/api
 
-CMD ["./bin/memecatcher"]
+CMD ["./bin/api"]
