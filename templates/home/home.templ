@@ -6,7 +6,7 @@ templ Index() {
 		<head>
 			<meta charset="UTF-8"/>
 			<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-			<title>Memecatcher</title>
+			<title>Memes</title>
 			<link href="templates/css/styles.css" rel="stylesheet"/>
 			<link href="templates/css/output.css" rel="stylesheet"/>
 			<link rel="preconnect" href="https://fonts.googleapis.com"/>
@@ -28,7 +28,7 @@ templ Index() {
 			</script>
 		</head>
 		<body class="amatic-sc-bold bg-gradient-to-r from-violet-200 to-pink-200 w-screen">
-			<h1 class="text-6xl text-slate-900 mt-14 mb-10 text-center">Meme Fetcher</h1>
+			<h1 class="text-6xl text-slate-900 mt-14 mb-10 text-center">Meme Catcher</h1>
 			<div class="flex flex-col lg:flex-row gap-12 lg:gap-8 lg:mx-16 justify-center items-center lg:items-start">
 				@Main()
 				@RecentMemes()
@@ -50,7 +50,7 @@ templ Main() {
 		</div>
 		<form id="memeForm" hx-post="/fetchMeme" hx-target="#imageContainer" hx-indicator="#spinner" class="flex flex-col gap-4 md:w-[540px] justify-center mx-auto">
 			<div class="flex flex-row gap-4">
-				<input required type="search" name="search" id="search" placeholder="Meme keyword" class="text-2xl p-2 border-2 rounded-lg w-4/6 lg:w-4/5"/>
+				<input required type="search" name="search" id="search" placeholder="keywords" class="text-2xl p-2 border-2 rounded-lg w-4/6 lg:w-4/5"/>
 				<button
 					type="submit"
 					class="border-2 border-black rounded-lg bg-slate-900 text-white px-3 hover:bg-slate-800 transition-all text-2xl w-2/6 lg:w-1/5"
