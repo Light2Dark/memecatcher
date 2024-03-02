@@ -2,19 +2,12 @@ package internal
 
 import (
 	"context"
-	"os"
 
-	"github.com/joho/godotenv"
 	"github.com/sashabaranov/go-openai"
 )
 
-func CreateOpenAIClient() (*openai.Client, error) {
-	err := godotenv.Load(".env")
-	if err != nil {
-		return nil, err
-	}
-
-	client := openai.NewClient(os.Getenv("OPENAI_API_KEY"))
+func CreateOpenAIClient(openaiKey string) (*openai.Client, error) {
+	client := openai.NewClient(openaiKey)
 	return client, nil
 }
 

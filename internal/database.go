@@ -3,21 +3,12 @@ package internal
 import (
 	"database/sql"
 	"fmt"
-	"os"
 
-	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
 )
 
-func NewDBConn() (*sql.DB, error) {
-	err := godotenv.Load(".env")
-	if err != nil {
-		return nil, err
-	}
-
-	// url := os.Getenv("TURSO_DB_URL") + "?authToken=" + os.Getenv("TURSO_AUTH_TOKEN")
-	connStr := os.Getenv("NEON_DSN")
-	db, err := sql.Open("postgres", connStr)
+func NewDBConn(dsn string) (*sql.DB, error) {
+	db, err := sql.Open("postgres", dsn)
 	if err != nil {
 		return nil, err
 	}
