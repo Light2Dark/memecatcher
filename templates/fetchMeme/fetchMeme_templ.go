@@ -31,7 +31,7 @@ func FetchMeme(imgUrl string, textContent string) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" alt=\"meme image from a subreddit\" class=\"object-cover h-full w-fit overflow-hidden rounded-lg\"><p hx-swap-oob=\"innerHTML:#textContent\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" alt=\"meme image from a subreddit\" class=\"h-full w-fit overflow-hidden rounded-lg\"><p hx-swap-oob=\"innerHTML:#textContent\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

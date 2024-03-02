@@ -1,6 +1,6 @@
 package templates
 
 templ FetchMeme(imgUrl string, textContent string) {
-	<img src={ imgUrl } alt="meme image from a subreddit" class="object-cover h-full w-fit overflow-hidden rounded-lg"/>
+	<img src={ imgUrl } alt="meme image from a subreddit" class="h-full w-fit overflow-hidden rounded-lg"/>
 	<p hx-swap-oob="innerHTML:#textContent">{ textContent }</p>
 }
