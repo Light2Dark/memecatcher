@@ -1,0 +1,11 @@
+package templates
+
+import "github.com/Light2Dark/memecatcher/internal"
+
+templ Meme(memes []internal.Meme) {
+	for _, meme := range memes {
+		<div class="h-48 rounded-lg shadow-md bg-slate-800">
+			<img src={ meme.ImageURL } alt="meme image from a subreddit" class="h-full w-fit overflow-hidden mx-auto"/>
+		</div>
+	}
+}
