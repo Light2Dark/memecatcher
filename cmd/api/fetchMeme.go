@@ -67,7 +67,7 @@ func (app *application) fetchMemeHandler(c echo.Context) error {
 		indexToTitle[i] = strings.ToLower(m.Title)
 	}
 
-	prompt := `Given a hashmap where each sentence number corresponds to a meme, with the hashmap as follows: ` + fmt.Sprintf("%v", indexToTitle) + `. The user has entered the search term: ` + search + `. Your task is to return the sentence number of the best match to the search term. In the world of memes, words often carry slang meanings, so be creative in finding a match. Often there is no word matches, just make up a loose connection between the search term and the meme. If there is no match, return 0. Provide your answer in the format: "Return: sentence number, Explanation: explanation". Make your explanation brief but change it to something witty or sarcastic.
+	prompt := `Given a hashmap where each sentence number corresponds to a meme, with the hashmap as follows: ` + fmt.Sprintf("%v", indexToTitle) + `. The user has entered the search term: ` + search + `. Your task is to return the sentence number of the best match to the search term. In the world of memes, words often carry slang meanings, so be creative in finding a match. Think very broadly in all subjects to find a match. When there is no match, choose a random meme and come up with a funny explanation about the person searching this. Provide your answer in the format: "Return: sentence number, Explanation: explanation". Make your explanation brief but change it to something witty or sarcastic.
 
 	Here are some examples of the hashmap and user searches and their expected return values:
 	Hashmap: {0: "I am a cat", 1: "I am a dog", 2: "I am a human"}
