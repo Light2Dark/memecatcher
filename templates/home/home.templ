@@ -28,7 +28,7 @@ templ Index() {
 			</script>
 		</head>
 		<body class="amatic-sc-bold bg-gradient-to-r from-violet-200 to-pink-200 w-screen">
-			<h1 class="text-6xl text-slate-900 mt-14 mb-10 text-center">Meme Catcher</h1>
+			<h1 class="text-6xl text-slate-900 mt-14 mb-10 text-center">Find A Meme</h1>
 			<div class="flex flex-col lg:flex-row gap-12 lg:gap-8 lg:mx-16 justify-center items-center lg:items-start">
 				@Main()
 				@RecentMemes()
@@ -56,10 +56,16 @@ templ Main() {
 					class="border-2 border-black rounded-lg bg-slate-900 text-white px-3 hover:bg-slate-800 transition-all text-2xl w-2/6 lg:w-1/5"
 				>Search</button>
 			</div>
-			<div class="flex flex-row gap-2 text-2xl" x-data="{ memeVal : 20 }">
-				<p>Memes searched</p>
-				<input type="range" name="numMemes" id="numMemes" min="1" max="50" x-model="memeVal" class="w-1/3"/>
-				<p x-text="memeVal"></p>
+			<div class="flex flex-col">
+				<div class="flex flex-row gap-4 text-2xl" x-data="{ memeVal : 30 }">
+					<p>Memes searched</p>
+					<input type="range" name="numMemes" id="numMemes" min="1" max="50" x-model="memeVal"/>
+					<p x-text="memeVal"></p>
+				</div>
+				<div class="flex flex-row gap-2">
+					<label for="nsfw" class="text-xl">NSFW</label>
+					<input type="checkbox" name="nsfw" id="nsfw" checked/>
+				</div>
 			</div>
 		</form>
 	</div>
