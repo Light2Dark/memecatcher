@@ -53,7 +53,7 @@ func (app *application) fetchMemeHandler(c echo.Context) error {
 
 	search := c.FormValue("search")
 	numMemesRequested, err := strconv.Atoi(c.FormValue("numMemes"))
-	numMemesRequested = numMemesRequested / 5 // Division factor
+	numMemesRequested = numMemesRequested / 3 // Division factor
 	nsfw := c.FormValue("nsfw")
 
 	if err != nil {
@@ -64,9 +64,8 @@ func (app *application) fetchMemeHandler(c echo.Context) error {
 	if nsfw == "on" {
 		includeNsfw = true
 	}
-	fmt.Println(includeNsfw)
 
-	var subreddits []string = []string{"memes", "dankmemes", "wholesomememes", "funny", "aww", "cute", "humor", "comics", "memeeconomy", "2meirl4meirl", "wholesomememes", "wholesomecomics", "wholesomeanimemes", "shitposting"}
+	var subreddits []string = []string{"memes", "dankmemes", "wholesomememes", "Animemes", "artmemes", "holesome", "2meirl4meirl", "wholesomememes", "shitposting"}
 
 	var wg sync.WaitGroup
 	var ch = make(chan MemeResponse, len(subreddits))
@@ -139,7 +138,7 @@ func (app *application) fetchMemeHandler(c echo.Context) error {
 		return err
 	}
 
-	re := regexp.MustCompile("[0-9]")
+	re := regexp.MustCompile(`\d+`)
 	memeNumString := re.FindString(resp)
 	memeNumber, err := strconv.Atoi(memeNumString)
 	if err != nil {
