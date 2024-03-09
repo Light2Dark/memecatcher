@@ -11,6 +11,7 @@ import (
 
 	"github.com/Light2Dark/memecatcher/internal"
 	templates "github.com/Light2Dark/memecatcher/templates/fetchMeme"
+	dropdown "github.com/Light2Dark/memecatcher/templates/home/dropdown"
 	"github.com/labstack/echo/v4"
 )
 
@@ -51,6 +52,22 @@ func (app *application) fetchMemeHandler(c echo.Context) error {
 		app.user.ID = newID
 	}
 
+	var subredditsChosen []string = make([]string, 0, len(dropdown.Subreddits))
+	for _, subreddit := range dropdown.Subreddits {
+		exists := c.FormValue(subreddit)
+		if exists != "" {
+			subredditsChosen = append(subredditsChosen, subreddit)
+		}
+	}
+
+	var extraSubreddits = c.FormValue("extraSubreddits")
+	if extraSubreddits != "" {
+		subs := strings.Split(extraSubreddits, ",")
+		for _, sub := range subs {
+			subredditsChosen = append(subredditsChosen, strings.TrimSpace(sub))
+		}
+	}
+
 	search := c.FormValue("search")
 	numMemesRequested, err := strconv.Atoi(c.FormValue("numMemes"))
 	numMemesRequested = numMemesRequested / 3 // Division factor
@@ -65,13 +82,11 @@ func (app *application) fetchMemeHandler(c echo.Context) error {
 		includeNsfw = true
 	}
 
-	var subreddits []string = []string{"memes", "dankmemes", "wholesomememes", "Animemes", "artmemes", "holesome", "2meirl4meirl", "wholesomememes", "shitposting"}
-
 	var wg sync.WaitGroup
-	var ch = make(chan MemeResponse, len(subreddits))
-	var indexToMemes = make(map[int]Meme, len(subreddits)*numMemesRequested)
+	var ch = make(chan MemeResponse, len(subredditsChosen))
+	var indexToMemes = make(map[int]Meme, len(subredditsChosen)*numMemesRequested)
 
-	for _, subreddit := range subreddits {
+	for _, subreddit := range subredditsChosen {
 		wg.Add(1)
 		memeAPIUrl := fmt.Sprintf("https://meme-api.com/gimme/%s/%d", subreddit, numMemesRequested)
 
@@ -150,7 +165,7 @@ func (app *application) fetchMemeHandler(c echo.Context) error {
 	memeExplanation := resp[strings.Index(resp, "Explanation: ")+len("Explanation: "):]
 	memeExplanation = strings.Replace(memeExplanation, "hashmap", "memes", -1)
 
-	fmt.Println("response:", resp, "memes:", indexToTitle)
+	// fmt.Println("response:", resp, "memes:", indexToTitle)
 
 	err = internal.InsertMeme(app.db, app.user.ID, highestImgQualityUrl)
 	if err != nil {

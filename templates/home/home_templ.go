@@ -10,6 +10,8 @@ import "context"
 import "io"
 import "bytes"
 
+import "github.com/Light2Dark/memecatcher/templates/home/dropdown"
+
 func Index() templ.Component {
 	return templ.ComponentFunc(func(ctx context.Context, templ_7745c5c3_W io.Writer) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templ_7745c5c3_W.(*bytes.Buffer)
@@ -59,7 +61,15 @@ func Main() templ.Component {
 			templ_7745c5c3_Var2 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"w-5/6 lg:w-full\"><div class=\"mb-10 flex flex-col gap-4 items-center\"><div class=\"bg-slate-800 h-[300px] w-full lg:h-[500px] rounded-lg shadow-lg flex justify-center items-center\"><svg id=\"spinner\" viewBox=\"0 0 50 50\" class=\"htmx-indicator transition-all\"><circle class=\"path\" cx=\"25\" cy=\"25\" r=\"20\" fill=\"none\" stroke-width=\"5\"></circle></svg><div id=\"imageContainer\" class=\"w-full h-full flex justify-center items-center\"></div></div><p id=\"textContent\" class=\"w-2/3 text-center text-2xl\"></p></div><form id=\"memeForm\" hx-post=\"/fetchMeme\" hx-target=\"#imageContainer\" hx-indicator=\"#spinner\" class=\"flex flex-col gap-4 md:w-[540px] justify-center mx-auto\"><div class=\"flex flex-row gap-4\"><input required type=\"search\" name=\"search\" id=\"search\" placeholder=\"keywords\" class=\"text-2xl p-2 border-2 rounded-lg w-4/6 lg:w-4/5\"> <button type=\"submit\" class=\"border-2 border-black rounded-lg bg-slate-900 text-white px-3 hover:bg-slate-800 transition-all text-2xl w-2/6 lg:w-1/5\">Search</button></div><div class=\"flex flex-col\"><div class=\"flex flex-row gap-4 text-2xl\" x-data=\"{ memeVal : 30 }\"><p>Memes searched</p><input type=\"range\" name=\"numMemes\" id=\"numMemes\" min=\"1\" max=\"50\" x-model=\"memeVal\"><p x-text=\"memeVal\"></p></div><div class=\"flex flex-row gap-2\"><label for=\"nsfw\" class=\"text-xl\">NSFW</label> <input type=\"checkbox\" name=\"nsfw\" id=\"nsfw\" checked></div></div></form></div>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"w-5/6 lg:w-full\"><div class=\"mb-10 flex flex-col gap-4 items-center\"><div class=\"bg-slate-800 h-[300px] w-full lg:h-[500px] rounded-lg shadow-lg flex justify-center items-center\"><svg id=\"spinner\" viewBox=\"0 0 50 50\" class=\"htmx-indicator transition-all\"><circle class=\"path\" cx=\"25\" cy=\"25\" r=\"20\" fill=\"none\" stroke-width=\"5\"></circle></svg><div id=\"imageContainer\" class=\"w-full h-full flex justify-center items-center\"></div></div><p id=\"textContent\" class=\"w-2/3 text-center text-2xl\"></p></div><form id=\"memeForm\" hx-post=\"/fetchMeme\" hx-target=\"#imageContainer\" hx-indicator=\"#spinner\" class=\"flex flex-col gap-4 md:w-[540px] justify-center mx-auto\"><div class=\"flex flex-row gap-4\"><input required type=\"search\" name=\"search\" id=\"search\" placeholder=\"keywords\" class=\"text-2xl p-2 border-2 rounded-lg w-4/6 lg:w-4/5\"> <button type=\"submit\" class=\"border-2 border-black rounded-lg bg-slate-900 text-[#faebd7] px-3 hover:bg-slate-800 transition-all text-2xl w-2/6 lg:w-1/5\">Search</button></div><div class=\"flex flex-col\"><div class=\"flex flex-row gap-4 text-2xl\" x-data=\"{ memeVal : 30 }\"><p>Memes searched</p><input type=\"range\" name=\"numMemes\" id=\"numMemes\" min=\"1\" max=\"50\" x-model=\"memeVal\"><p x-text=\"memeVal\"></p></div><div class=\"flex flex-row gap-2\"><label for=\"nsfw\" class=\"text-xl\">NSFW</label> <input type=\"checkbox\" name=\"nsfw\" id=\"nsfw\" checked></div></div><div class=\"flex flex-col gap-1\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templates.Dropdown().Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"flex flex-row gap-2\"><label for=\"extraSubreddits\" class=\"text-lg\">Extra Subreddits:</label> <input type=\"text\" name=\"extraSubreddits\" id=\"extraSubreddits\" placeholder=\"Separate by comma\" class=\"font-extralight text-xs font-mono rounded-lg bg-black px-2 py-1.5 flex-1 text-white placeholder:text-[#faebd7]\"></div></div></form></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
