@@ -40,7 +40,6 @@ func CreateTables(db *sql.DB) error {
 		user_id TEXT NOT NULL,
 		image_url TEXT,
 		created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-		FOREIGN KEY (user_id) REFERENCES users(id)
 	);
 	`
 
