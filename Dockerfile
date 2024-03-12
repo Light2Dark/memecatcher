@@ -1,14 +1,8 @@
-FROM golang:1.22
+FROM golang:1.22-alpine
 
 WORKDIR /app
 
 COPY go.mod go.sum ./
-
-# Cloud build may not be installing golang
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
-    golang && \
-    rm -rf /var/lib/apt/lists/*
 
 RUN go mod download
 
