@@ -33,6 +33,7 @@ type MemeResponse struct {
 type Meme struct {
 	Title                string
 	HighestImgQualityUrl string
+	Subreddit            string
 }
 
 func (app *application) fetchMemeHandler(c echo.Context) error {
@@ -70,7 +71,7 @@ func (app *application) fetchMemeHandler(c echo.Context) error {
 
 	search := c.FormValue("search")
 	numMemesRequested, err := strconv.Atoi(c.FormValue("numMemes"))
-	numMemesRequested = numMemesRequested / 3 // Division factor
+	numMemesRequested = 1 // Division factor
 	nsfw := c.FormValue("nsfw")
 
 	if err != nil {
@@ -84,7 +85,6 @@ func (app *application) fetchMemeHandler(c echo.Context) error {
 
 	var wg sync.WaitGroup
 	var ch = make(chan MemeResponse, len(subredditsChosen))
-	var indexToMemes = make(map[int]Meme, len(subredditsChosen)*numMemesRequested)
 
 	for _, subreddit := range subredditsChosen {
 		wg.Add(1)
@@ -94,7 +94,7 @@ func (app *application) fetchMemeHandler(c echo.Context) error {
 			defer wg.Done()
 			res, err := http.Get(memeAPIUrl)
 			if err != nil {
-				fmt.Println("error fetching data from", memeAPIUrl, ":", err)
+				c.Logger().Error("error fetching data from", memeAPIUrl, ":", err)
 				return
 			}
 			defer res.Body.Close()
@@ -102,7 +102,7 @@ func (app *application) fetchMemeHandler(c echo.Context) error {
 			var memeResponse MemeResponse
 			err = json.NewDecoder(res.Body).Decode(&memeResponse)
 			if err != nil {
-				fmt.Println("error decoding meme response:", err)
+				c.Logger().Error("error decoding meme response:", err)
 				return
 			}
 			ch <- memeResponse
@@ -114,6 +114,8 @@ func (app *application) fetchMemeHandler(c echo.Context) error {
 		close(ch)
 	}()
 
+	var indexToMeme = make(map[int]Meme, len(subredditsChosen)*numMemesRequested)
+
 	count := 0
 	for memeRes := range ch {
 		for _, meme := range memeRes.Memes {
@@ -123,29 +125,31 @@ func (app *application) fetchMemeHandler(c echo.Context) error {
 
 			memeToAdd := Meme{
 				Title:                meme.Title,
+				Subreddit:            meme.Subreddit,
 				HighestImgQualityUrl: meme.Preview[len(meme.Preview)-1],
 			}
+			indexToMeme[count] = memeToAdd
 
-			indexToMemes[count] = memeToAdd
 			count++
 		}
 	}
 
-	var indexToTitle = make(map[int]string, len(indexToMemes))
-	for i, meme := range indexToMemes {
-		indexToTitle[i] = meme.Title
+	var memePrompt strings.Builder
+	for i, meme := range indexToMeme {
+		memePrompt.WriteString(fmt.Sprintf("%d:[title: %s, subreddit: %s] ", i, meme.Title, meme.Subreddit))
 	}
+	c.Logger().Debug("memePrompt:", memePrompt.String())
 
-	prompt := `Given a hashmap where each sentence number corresponds to a meme, with the hashmap as follows: ` + fmt.Sprintf("%v", indexToTitle) + `. The user has entered the search term: ` + search + `. Your task is to return the sentence number of the best match to the search term. In the world of memes, words often carry slang meanings, so be creative in finding a match. Think very broadly in all subjects to find a match. When there is no match, return a random meme (it's number) and come up with a funny explanation about the person searching this. Provide your answer in the format: "Return: sentence number, Explanation: explanation". Make your explanation brief but change it to something witty or sarcastic.
+	prompt := `Given a hashmap where each sentence number corresponds to a meme array. The first part of the array is the meme title while the second part of the array is the subreddit it's pulled from. Here is the hashmap: ` + memePrompt.String() + `. The user has entered the search term: ` + search + `. Your task is to return the sentence number of the best match to the search term. In the world of memes, words often carry slang meanings, so be creative in finding a match. Think very broadly in all subjects to find a match. When there is no match, return a random meme (it's number) and come up with a funny explanation about the person searching this. Provide your answer in the format: "Return: sentence number, Explanation: explanation". Make your explanation brief but change it to something witty or sarcastic, refer the user as "you" or "your".
 
 	Here are some examples of the hashmap and user searches and their expected return values:
-	Hashmap: {0: "I am a cat", 1: "I am a dog", 2: "I am a human"}
+	Hashmap: 1:[title: 2meirl4meirl, subreddit: dog] 5:[title: noPrivilegesNoProblems, subreddit: ProgrammerHumor], 0:[title: The Freudian surface is much too slippery., subreddit: dankmemes]
 	User search: "Doggo"
-	Your response: Return: 1, Explanation: The title "doggo" indicates a dog
+	Your response: Return: 1, Explanation: Perhaps this 2meirl meme from the dog land will make you feel better.
 
-	Hashmap: {0: "Rolling in dough", 1: "I am a dog", 2: "I am a human"}
+	Hashmap: 1: [title: Rolling in dough, subreddit: dollar], 2: [title: I am a dog, subreddit: dog]
 	User search: "Balling"
-	Your response: Return: 0, Explanation: The title "balling" is a slang term for "rolling in dough"
+	Your response: Return: 0, Explanation: You be "balling" by rolling in dough in these dollar streets.
 	`
 
 	resp, err := internal.ChatCompletion(app.openAiClient, prompt, 100)
@@ -161,11 +165,11 @@ func (app *application) fetchMemeHandler(c echo.Context) error {
 		memeNumber = 0
 	}
 
-	highestImgQualityUrl := indexToMemes[memeNumber].HighestImgQualityUrl
+	highestImgQualityUrl := indexToMeme[memeNumber].HighestImgQualityUrl
 	memeExplanation := resp[strings.Index(resp, "Explanation: ")+len("Explanation: "):]
 	memeExplanation = strings.Replace(memeExplanation, "hashmap", "memes", -1)
 
-	// fmt.Println("response:", resp, "memes:", indexToTitle)
+	c.Logger().Debug("memeExplanation:", memeExplanation)
 
 	err = internal.InsertMeme(app.db, app.user.ID, highestImgQualityUrl)
 	if err != nil {
