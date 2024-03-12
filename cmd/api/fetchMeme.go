@@ -71,7 +71,7 @@ func (app *application) fetchMemeHandler(c echo.Context) error {
 
 	search := c.FormValue("search")
 	numMemesRequested, err := strconv.Atoi(c.FormValue("numMemes"))
-	numMemesRequested = 1 // Division factor
+	numMemesRequested = numMemesRequested / 3 // Division factor
 	nsfw := c.FormValue("nsfw")
 
 	if err != nil {

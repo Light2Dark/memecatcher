@@ -76,7 +76,7 @@ func loadConfig() (*config, error) {
 
 	port := os.Getenv("PORT")
 	if port == "" {
-		port = "3000"
+		port = "8080"
 	}
 
 	if os.Getenv("OPENAI_API_KEY") == "" || os.Getenv("NEON_DSN") == "" {
