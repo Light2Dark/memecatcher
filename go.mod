@@ -3,10 +3,10 @@ module github.com/Light2Dark/memecatcher
 go 1.22.0
 
 require (
-	github.com/a-h/templ v0.2.543
+	github.com/a-h/templ v0.2.707
 	github.com/joho/godotenv v1.5.1
-	github.com/labstack/echo/v4 v4.11.4
-	github.com/sashabaranov/go-openai v1.20.0
+	github.com/labstack/echo/v4 v4.12.0
+	github.com/sashabaranov/go-openai v1.24.1
 )
 
 require (
@@ -17,8 +17,8 @@ require (
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/fasttemplate v1.2.2 // indirect
-	golang.org/x/crypto v0.17.0 // indirect
-	golang.org/x/net v0.19.0 // indirect
-	golang.org/x/sys v0.15.0 // indirect
-	golang.org/x/text v0.14.0 // indirect
+	golang.org/x/crypto v0.24.0 // indirect
+	golang.org/x/net v0.26.0 // indirect
+	golang.org/x/sys v0.21.0 // indirect
+	golang.org/x/text v0.16.0 // indirect
 )

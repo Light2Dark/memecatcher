@@ -157,6 +157,9 @@ func (app *application) fetchMemeHandler(c echo.Context) error {
 		return err
 	}
 
+	// fmt.Println("memes", indexToMeme)
+	// fmt.Println("response", resp)
+
 	re := regexp.MustCompile(`\d+`)
 	memeNumString := re.FindString(resp)
 	memeNumber, err := strconv.Atoi(memeNumString)
@@ -169,6 +172,7 @@ func (app *application) fetchMemeHandler(c echo.Context) error {
 	memeExplanation := resp[strings.Index(resp, "Explanation: ")+len("Explanation: "):]
 	memeExplanation = strings.Replace(memeExplanation, "hashmap", "memes", -1)
 
+	// fmt.Println("memeChosen", memeNumber, "memeExplanation", memeExplanation)
 	c.Logger().Debug("memeExplanation:", memeExplanation)
 
 	err = internal.InsertMeme(app.db, app.user.ID, highestImgQualityUrl)
